@@ -1,27 +1,9 @@
-#!/bin/bash
+#!/usr/bin/env bash
+# redirect
+sudo apt-get update
+sudo apt-get -y install nginx
+ufw allow 'Nginx HTTP'
+echo "Holberton School" > /var/www/html/index.nginx-debian.html
 
-sudo apt update
-sudo apt install -y nginx
-
-sudo tee /etc/nginx/sites-available/default > /dev/null <<EOL
-server {
-    listen 80 default_server;
-    listen [::]:80 default_server;
-
-    root /var/www/html;
-    index index.html index.htm index.nginx-debian.html;
-
-    server_name _;
-
-    location / {
-        try_files \$uri \$uri/ =404;
-    }
-
-    location /redirect_me {
-        return 301 http://example.com;
-    }
-}
-EOL
-
-sudo nginx -t
+sed -i '/listen 80 default_server/a rewrite ^/redirect_me https://www.youtube.com/watch?v=QH2-TGUlwu4 permanent;' /etc/nginx/sites-available/default
 sudo service nginx start
